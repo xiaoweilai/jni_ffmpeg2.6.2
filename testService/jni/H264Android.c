@@ -17,6 +17,12 @@ struct AVCodec *codec=NULL;			  // Codec
 struct AVCodecContext *c=NULL;		  // Codec Context
 struct AVFrame *picture=NULL;		  // Frame
 
+
+#define INBUF_SIZE 4096
+#define AUDIO_INBUF_SIZE 20480
+#define AUDIO_REFILL_THRESH 4096
+
+
 int iWidth=0;
 int iHeight=0;
 
@@ -72,13 +78,13 @@ static int decode_write_frame(AVCodecContext *avctx, AVFrame *frame, int *frame_
                 int g = 298 * C - 100 * D - 208 * E + 128;
                 int b = 298 * C + 516 * D           + 128;
 
-                r = qBound(0, r >> 8, 255);
-                g = qBound(0, g >> 8, 255);
-                b = qBound(0, b >> 8, 255);
-
-                r = qBound(0, r, 255);
-                g = qBound(0, g, 255);
-                b = qBound(0, b, 255);
+//                r = qBound(0, r >> 8, 255);
+//                g = qBound(0, g >> 8, 255);
+//                b = qBound(0, b >> 8, 255);
+//
+//                r = qBound(0, r, 255);
+//                g = qBound(0, g, 255);
+//                b = qBound(0, b, 255);
 
 //                QRgb rgb = qRgb(r, g, b);
 //                image.setPixel(QPoint(w, h), rgb);
@@ -98,6 +104,82 @@ static int decode_write_frame(AVCodecContext *avctx, AVFrame *frame, int *frame_
     }
     return 0;
 }
+
+
+
+
+int mainloop(void)
+{
+
+
+    avcodec_register_all();
+    AVCodec *codec;
+    AVCodecContext *c= NULL;
+    int frame_count;
+    FILE *f;
+    AVFrame *frame;
+    uint8_t inbuf[INBUF_SIZE + FF_INPUT_BUFFER_PADDING_SIZE];
+    AVPacket avpkt;
+    av_init_packet(&avpkt);
+
+    memset(inbuf + INBUF_SIZE, 0, FF_INPUT_BUFFER_PADDING_SIZE);
+
+
+    codec = avcodec_find_decoder(AV_CODEC_ID_MPEG1VIDEO);
+    if (!codec)
+    {
+        fprintf(stderr, "Codec not found\n");
+        exit(1);
+    }
+    c = avcodec_alloc_context3(codec);
+    if (!c) {
+        fprintf(stderr, "Could not allocate video codec context\n");
+        exit(1);
+    }
+    if(codec->capabilities&CODEC_CAP_TRUNCATED)
+        c->flags|= CODEC_FLAG_TRUNCATED;
+    if (avcodec_open2(c, codec, NULL) < 0) {
+        fprintf(stderr, "Could not open codec\n");
+        exit(1);
+    }
+    f = fopen("test.mpg", "rb");
+    if (!f) {
+        fprintf(stderr, "Could not open input file\n");
+        exit(1);
+    }
+    frame = av_frame_alloc();
+    if (!frame) {
+        fprintf(stderr, "Could not allocate video frame\n");
+        exit(1);
+    }
+    frame_count = 0;
+    for (;;) {
+        avpkt.size = fread(inbuf, 1, INBUF_SIZE, f);
+        if (avpkt.size == 0)
+            break;
+        avpkt.data = inbuf;
+        while (avpkt.size > 0)
+            if (decode_write_frame(c, frame, &frame_count, &avpkt, 0) < 0)
+                exit(1);
+    }
+}
+
+
+
+
+static int init_codec()
+{
+	 avcodec_register_all();
+	 AVCodec *codec;
+	 AVCodecContext *c= NULL;
+	 int frame_count;
+	 FILE *f;
+	 AVFrame *frame;
+	 uint8_t inbuf[INBUF_SIZE + FF_INPUT_BUFFER_PADDING_SIZE];
+	 AVPacket avpkt;
+	 av_init_packet(&avpkt);
+}
+
 
 
 
@@ -254,7 +336,7 @@ JNIEXPORT jint JNICALL Java_com_zhutieju_testservice_H264Android_initDecoder
 
 	avcodec_register_all();
 	//找到H264解码器
-	codec = avcodec_find_decoder(CODEC_ID_H264);
+	codec = avcodec_find_decoder(AV_CODEC_ID_H264);
 	//分配解码器内存
 	c = avcodec_alloc_context3(codec);
 	//打开解码器
