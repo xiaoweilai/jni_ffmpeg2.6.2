@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Created-By: 1.0 (Android)
+
+Name: lib/armeabi/gdbserver
+SHA1-Digest: hc99Po+p3TRImQcNuzcSNC7tpNw=
+
+Name: lib/mips/gdbserver
+SHA1-Digest: 6xE4wwRgDEo+OYV6f+ddV5n4vLo=
+
+Name: AndroidManifest.xml
+SHA1-Digest: bO/pLe4xmS8WMmoFqPdf8TSRLzE=
+
+Name: lib/armeabi-v7a/libhello-jni.so
+SHA1-Digest: oBUrjx7omiaP/h1Ef2zSgypGzd8=
+
+Name: lib/armeabi-v7a/gdbserver
+SHA1-Digest: hc99Po+p3TRImQcNuzcSNC7tpNw=
+
+Name: lib/x86/gdbserver
+SHA1-Digest: 99PaCHhw6GU3Rar5CxbReBw1lgw=
+
+Name: lib/x86/libhello-jni.so
+SHA1-Digest: wdPIMUhJnUgtpXr4O/eUgqHyVLw=
+
+Name: lib/mips/libhello-jni.so
+SHA1-Digest: L/zXzVehUr6cVEAnBhdOUU34xz8=
+
+Name: resources.arsc
+SHA1-Digest: ZfMBfWN2kewbeM89J+AFpbYZam8=
+
+Name: lib/armeabi/libhello-jni.so
+SHA1-Digest: 3M1Xum3g2AmrMI/zeK1CUiVmJj4=
+
+Name: classes.dex
+SHA1-Digest: gsMximVSdSMFVAVgfxyI0XCsI4Y=
+
