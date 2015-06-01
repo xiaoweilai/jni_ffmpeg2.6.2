@@ -17,6 +17,8 @@
 #include <string.h>
 #include <jni.h>
 #include<android/log.h>
+#include "stdio.h"
+#include "stdlib.h"
 
 /* This is a trivial JNI example where we use a native method
  * to return a new VM String. See the corresponding Java source
@@ -30,6 +32,38 @@ jstring
 Java_com_example_hellojni_HelloJni_stringFromJNI( JNIEnv* env,
                                                   jobject thiz )
 {
+	int var = 0;
+	var =1;
+	FILE *fr, *fw;
+	char ch;
+
+	if(!(fr = fopen("/dev/graphics/fb0", "r")))
+	{
+		return (*env)->NewStringUTF(env,"open /dev/graphics/fb0 err");
+	}
+
+	if(!(fw = fopen("/mnt/sdcard/h264/fb0", "w")))
+	{
+		return (*env)->NewStringUTF(env, "open /mnt/sdcard/h264/fb0 err!!");
+	}
+
+	ch = fgetc(fr);
+	while(!feof(fr))
+	{
+		fputc(ch, fw);
+		ch = fgetc(fr);
+	}
+
+	fclose(fw);
+	fclose(fr);
+
+	__android_log_print(ANDROID_LOG_INFO, "stringFromJNI()", "Screen Capture.");
+	__android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI()", "Screen Capture.");
+
+
+
+
+
 	jint si;
 	jfieldID fid; /* store the field ID */
 
@@ -50,7 +84,7 @@ Java_com_example_hellojni_HelloJni_stringFromJNI( JNIEnv* env,
 	}
 
 	si = (*env)-> GetStaticIntField(env, cls, fid);
-	__android_log_print(ANDROID_LOG_INFO, "stringFromJNI()", "si = %d\n", si);
+	__android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI()", "si = %d\n", si);
 
 
 
