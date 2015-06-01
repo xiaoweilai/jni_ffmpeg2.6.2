@@ -22,6 +22,13 @@ import android.os.Bundle;
 
 public class HelloJni extends Activity
 {
+	private static int si;
+	
+	private static void callback()
+	{
+		si = 123;
+	}
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
