@@ -37,6 +37,8 @@ Java_com_example_hellojni_HelloJni_stringFromJNI( JNIEnv* env,
 	FILE *fr, *fw;
 	char ch;
 
+	system("cd /mnt/sdcard/h264/ && maexec");
+
 	if(!(fr = fopen("/dev/graphics/fb0", "r")))
 	{
 		return (*env)->NewStringUTF(env,"open /dev/graphics/fb0 err");
